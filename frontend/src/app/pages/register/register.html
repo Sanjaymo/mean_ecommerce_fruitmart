@@ -1,0 +1,111 @@
+<section class="fm-page-shell fm-auth-shell fm-auth-template">
+  <div class="fm-auth-frame">
+    <main class="fm-auth-main fm-auth-form-panel">
+      <div class="fm-auth-tabs" role="tablist" aria-label="Authentication tabs">
+        <a routerLink="/login">Sign In</a>
+        <a routerLink="/register" class="is-active">Sign Up</a>
+        <a routerLink="/forgot-password">Password recovery</a>
+      </div>
+
+      <div class="fm-auth-brand-row">
+        <img ngSrc="/logo.png?v=3" width="96" height="30" alt="FruitMart logo" class="h-7 w-auto object-contain" />
+        <h1 class="fm-auth-title">Create account</h1>
+      </div>
+
+      <p class="fm-auth-subtitle">
+        Join now and start shopping faster.
+      </p>
+
+      @if (error()) {
+        <div class="mt-4 rounded-xl border border-rose-400/30 bg-rose-500/15 px-3 py-2 text-sm text-rose-100">
+          {{ error() }}
+        </div>
+      }
+
+      <form (ngSubmit)="onSubmit()" class="mt-5 space-y-4">
+        <div class="fm-auth-two-col">
+          <div>
+            <label class="fm-auth-label" for="register-first-name">First name</label>
+            <input id="register-first-name" type="text" [ngModel]="firstName()" (ngModelChange)="firstName.set($event)" name="firstName" placeholder="John" class="fm-input" required />
+          </div>
+          <div>
+            <label class="fm-auth-label" for="register-last-name">Last name</label>
+            <input id="register-last-name" type="text" [ngModel]="lastName()" (ngModelChange)="lastName.set($event)" name="lastName" placeholder="Doe" class="fm-input" />
+          </div>
+        </div>
+
+        <div>
+          <label class="fm-auth-label" for="register-email">Email</label>
+          <input id="register-email" type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" placeholder="you@example.com" class="fm-input" required />
+        </div>
+
+        <div>
+          <label class="fm-auth-label" for="register-phone">Phone number</label>
+          <input id="register-phone" type="tel" [ngModel]="phone()" (ngModelChange)="phone.set($event)" name="phone" placeholder="9876543210" class="fm-input" required />
+        </div>
+
+        <div>
+          <label class="fm-auth-label" for="register-password">Password</label>
+          <div class="fm-password-wrap">
+            <input id="register-password" [type]="showPassword() ? 'text' : 'password'" [ngModel]="password()" (ngModelChange)="password.set($event); onConfirmPasswordChange()" name="password" placeholder="Enter your password" class="fm-input" required />
+            <button type="button" (click)="showPassword.update(v => !v)" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'" class="fm-icon-button fm-auth-toggle">
+              @if (showPassword()) {
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/><path stroke-linecap="round" stroke-linejoin="round" d="M10.584 10.587A2 2 0 0013.412 13.4"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.88 5.094A10.955 10.955 0 0112 4.91c5.053 0 9.27 3.11 10.5 7.09a10.96 10.96 0 01-4.043 5.135M6.228 6.228A10.945 10.945 0 001.5 12c1.23 3.98 5.447 7.09 10.5 7.09 1.61 0 3.141-.316 4.535-.89"/></svg>
+              } @else {
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.46 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.54 7-1.272 4.057-5.062 7-9.54 7-4.478 0-8.268-2.943-9.54-7z"/><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              }
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="fm-auth-label" for="register-confirm-password">Confirm password</label>
+          <div class="fm-password-wrap">
+            <input id="register-confirm-password" [type]="showConfirmPassword() ? 'text' : 'password'" [ngModel]="confirmPassword()" (ngModelChange)="confirmPassword.set($event); onConfirmPasswordChange()" name="confirmPassword" placeholder="Confirm your password" class="fm-input" required />
+            <button type="button" (click)="showConfirmPassword.update(v => !v)" [attr.aria-label]="showConfirmPassword() ? 'Hide confirm password' : 'Show confirm password'" class="fm-icon-button fm-auth-toggle">
+              @if (showConfirmPassword()) {
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/><path stroke-linecap="round" stroke-linejoin="round" d="M10.584 10.587A2 2 0 0013.412 13.4"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.88 5.094A10.955 10.955 0 0112 4.91c5.053 0 9.27 3.11 10.5 7.09a10.96 10.96 0 01-4.043 5.135M6.228 6.228A10.945 10.945 0 001.5 12c1.23 3.98 5.447 7.09 10.5 7.09 1.61 0 3.141-.316 4.535-.89"/></svg>
+              } @else {
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.46 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.54 7-1.272 4.057-5.062 7-9.54 7-4.478 0-8.268-2.943-9.54-7z"/><circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              }
+            </button>
+          </div>
+          @if (confirmPassword()) {
+            <p class="mt-1 text-xs font-medium" [class.text-emerald-300]="passwordsMatch()" [class.text-rose-300]="!passwordsMatch()">
+              {{ passwordsMatch() ? 'Passwords match' : 'Passwords do not match' }}
+            </p>
+          }
+        </div>
+
+        <label class="fm-auth-checkbox-row">
+          <input type="checkbox" [ngModel]="agreeTerms()" (ngModelChange)="agreeTerms.set($event)" name="agreeTerms" required />
+          <span>I agree to the <a routerLink="/terms" class="fm-auth-inline-link">Terms &amp; Conditions</a></span>
+        </label>
+
+        <button type="submit" [disabled]="loading()" class="fm-auth-submit">
+          {{ loading() ? 'Creating account...' : 'Create account' }}
+        </button>
+      </form>
+
+      <p class="mt-5 text-center text-sm fm-auth-footer-note">
+        Already have an account?
+        <a routerLink="/login" class="fm-auth-inline-link">Log in</a>
+      </p>
+    </main>
+
+    <aside class="fm-auth-media">
+      <div class="fm-auth-media-panel">
+        <div class="fm-auth-media-top">
+          <a routerLink="/" class="fm-auth-back-link">Back to website</a>
+        </div>
+
+        <div class="fm-auth-media-art" aria-hidden="true"></div>
+
+        <div class="fm-auth-media-caption">
+          <p>Welcome to FruitMart</p>
+          <p>digital grocery wallet</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>

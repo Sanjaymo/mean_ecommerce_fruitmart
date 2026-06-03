@@ -1,0 +1,113 @@
+<div class="fm-cart-page min-h-screen bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Your Cart</h1>
+
+    @if (!deliveryLocation()) {
+      <div class="mb-6 rounded-xl border border-amber-300 bg-amber-50 p-4">
+        <p class="text-sm font-semibold text-amber-800">Delivery location required for checkout</p>
+        <p class="mt-1 text-sm text-amber-700">Please configure your map-based delivery location before placing order.</p>
+        <a routerLink="/delivery-location" [queryParams]="{ returnTo: '/cart' }" class="mt-3 inline-block cursor-pointer rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700">
+          Add Delivery Location
+        </a>
+      </div>
+    }
+
+    @if (items().length === 0) {
+      <!-- Empty cart -->
+      <div class="text-center py-20">
+        <div class="text-6xl mb-4">🛒</div>
+        <h2 class="text-xl text-gray-500 mb-4">Your cart is empty</h2>
+        <a routerLink="/dashboard" class="inline-block cursor-pointer bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition">
+          Browse Fruits
+        </a>
+      </div>
+    } @else {
+      <!-- Cart items -->
+      <div class="space-y-4 mb-8">
+        @for (item of items(); track item.product._id) {
+          <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <img [ngSrc]="item.product.image" [alt]="item.product.name" width="128" height="128" class="w-full max-w-32 h-32 sm:w-20 sm:h-20 rounded-lg object-cover" loading="lazy" decoding="async" />
+            <div class="flex-1 min-w-0 w-full">
+              <h3 class="font-semibold text-gray-900">{{ item.product.name }}</h3>
+              <p class="text-sm text-gray-500">{{ item.product.description }}</p>
+              <p class="text-green-600 font-bold mt-1">{{ item.product.price | currency:'INR':'symbol':'1.2-2':'en-IN' }} each</p>
+            </div>
+
+            <!-- Quantity controls -->
+            <div class="flex items-center gap-2 self-start sm:self-center">
+              <button
+                (click)="decrement(item.product._id, item.quantity)"
+                class="w-8 h-8 cursor-pointer rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center font-bold text-gray-600 transition">
+                −
+              </button>
+              <span class="w-8 text-center font-semibold">{{ item.quantity }}</span>
+              <button
+                (click)="increment(item.product._id, item.quantity)"
+                class="w-8 h-8 cursor-pointer rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center font-bold text-gray-600 transition">
+                +
+              </button>
+            </div>
+
+            <!-- Item total -->
+            <div class="text-left sm:text-right w-full sm:w-24">
+              <p class="font-bold text-gray-900">{{ item.product.price * item.quantity | currency:'INR':'symbol':'1.2-2':'en-IN' }}</p>
+            </div>
+
+            <!-- Remove -->
+            <button
+              (click)="remove(item.product._id)"
+              class="cursor-pointer text-red-400 hover:text-red-600 transition p-1 self-end sm:self-center">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Order summary -->
+      <div class="fm-cart-summary bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
+        @if (deliveryLocation()) {
+          <div class="mb-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+            <p class="font-semibold text-slate-900">Delivery Location</p>
+            <p class="mt-1">{{ deliveryLocation()?.formattedAddress || (deliveryLocation()?.city + ', ' + deliveryLocation()?.state) }}</p>
+          </div>
+        }
+        <div class="flex justify-between text-gray-600 mb-2">
+          <span>Items ({{ totalItems() }})</span>
+          <span>{{ totalPrice() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+        </div>
+        <div class="flex justify-between text-gray-600 mb-2">
+          <span>Delivery</span>
+          <span class="text-green-600 font-medium">Free</span>
+        </div>
+        <hr class="my-3" />
+        <div class="flex justify-between text-xl font-bold text-gray-900 mb-6">
+          <span>Total</span>
+          <span>{{ totalPrice() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+        </div>
+        @if (checkoutErr()) {
+          <div class="mb-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{{ checkoutErr() }}</div>
+        }
+        <button
+          (click)="placeOrder()"
+          [disabled]="checkoutLoading()"
+          [ngClass]="{
+            'opacity-50 cursor-not-allowed': checkoutLoading(),
+            'cursor-pointer hover:-translate-y-0.5 hover:shadow-xl': !checkoutLoading()
+          }"
+          class="fm-cart-cta w-full rounded-xl bg-gradient-to-r from-sky-700 via-blue-700 to-slate-950 px-5 py-3 text-lg font-semibold text-white shadow-lg shadow-blue-950/25 transition duration-300">
+          @if (checkoutLoading()) {
+            <span class="flex items-center justify-center gap-2">
+              <span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              Buying now...
+            </span>
+          } @else {
+            Buy now
+          }
+        </button>
+      </div>
+    }
+  </div>
+</div>

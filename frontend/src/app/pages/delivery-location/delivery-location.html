@@ -1,0 +1,107 @@
+<section class="min-h-[calc(100vh-4rem)] bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <div class="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">Delivery Location</h1>
+          <p class="mt-1 text-sm text-slate-500">Set your map location to speed up delivery confirmation and checkout.</p>
+        </div>
+        <a [routerLink]="returnTo()" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">Back</a>
+      </div>
+
+      @if (msg()) {
+        <div class="mb-4 rounded-lg bg-emerald-50 px-4 py-2 text-sm text-emerald-700">{{ msg() }}</div>
+      }
+      @if (err()) {
+        <div class="mb-4 rounded-lg bg-rose-50 px-4 py-2 text-sm text-rose-700">{{ err() }}</div>
+      }
+
+      <div class="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+        <div>
+          <div class="mb-3 flex flex-col gap-2 sm:flex-row">
+            <input
+              [ngModel]="searchQuery()"
+              (ngModelChange)="searchQuery.set($event)"
+              (keydown.enter)="searchLocation()"
+              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              placeholder="Search location (e.g. Alkapuri, Vadodara)"
+              aria-label="Search delivery location"
+            />
+            <button
+              type="button"
+              (click)="searchLocation()"
+              [disabled]="loading()"
+              class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            >
+              Search
+            </button>
+          </div>
+
+          <div #mapHost class="leaflet-map-host relative z-0 h-72 w-full overflow-hidden rounded-xl border border-slate-200"></div>
+          <p class="mt-2 text-xs text-slate-500">Tip: click anywhere on map or drag the pin to set your delivery point.</p>
+          <div class="mt-3 flex flex-wrap gap-3">
+            <button type="button" (click)="fetchMyLocation()" class="rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-700" [disabled]="loading()" aria-label="Fetch my current location">
+              {{ loading() ? 'Locating...' : 'Fetch My Location' }}
+            </button>
+            <button type="button" (click)="reverseGeocode()" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" [disabled]="loading()">
+              Fetch Address From Pin
+            </button>
+          </div>
+          @if (locationAccuracyMeters() !== null) {
+            <p class="mt-2 text-xs" [class]="(locationAccuracyMeters()! <= 100 ? 'text-emerald-600' : locationAccuracyMeters()! <= 1200 ? 'text-amber-600' : 'text-rose-600')">
+              GPS accuracy: {{ locationAccuracyMeters() }} m
+              {{ locationAccuracyMeters()! <= 100 ? '(excellent)' : locationAccuracyMeters()! <= 1200 ? '(fair)' : '(poor — use Search instead)' }}
+            </p>
+          }
+        </div>
+
+        <div class="space-y-4">
+          <p class="rounded-lg border border-sky-100 bg-sky-50 px-3 py-2 text-xs text-sky-700">
+            Delivery point coordinates are set automatically from map pin selection.
+          </p>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-slate-700">Address Line</label>
+            <input [ngModel]="addressLine()" (ngModelChange)="addressLine.set($event)" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="House/flat, street" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="mb-1 block text-sm font-medium text-slate-700">City</label>
+              <input [ngModel]="city()" (ngModelChange)="city.set($event)" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-slate-700">State</label>
+              <input [ngModel]="state()" (ngModelChange)="state.set($event)" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="mb-1 block text-sm font-medium text-slate-700">Pincode</label>
+              <input [ngModel]="pincode()" (ngModelChange)="pincode.set($event)" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-slate-700">Country</label>
+              <input [ngModel]="country()" (ngModelChange)="country.set($event)" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-slate-700">Formatted Address</label>
+            <textarea [ngModel]="formattedAddress()" (ngModelChange)="formattedAddress.set($event)" rows="3" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"></textarea>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <button type="button" (click)="saveLocation()" [disabled]="saving()" class="rounded-lg bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700">
+              {{ saving() ? 'Saving...' : 'Save Delivery Location' }}
+            </button>
+            <button type="button" (click)="continueBack()" class="rounded-lg border border-slate-300 px-5 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

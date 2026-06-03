@@ -1,0 +1,180 @@
+:root[data-theme='dark'] .admin-dashboard-page {
+  background:
+    radial-gradient(circle at top, rgba(16, 185, 129, 0.16), transparent 32%),
+    linear-gradient(180deg, #020617 0%, #0b1224 100%);
+  color: #e2e8f0;
+  background-attachment: fixed;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page {
+  background:
+    radial-gradient(circle at top, rgba(16, 185, 129, 0.16), transparent 32%),
+    linear-gradient(180deg, #020617 0%, #0b1224 100%) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .border-slate-200,
+:root[data-theme='dark'] .admin-dashboard-page .border-slate-300,
+:root[data-theme='dark'] .admin-dashboard-page .border-dashed {
+  border-color: rgba(148, 163, 184, 0.3) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .bg-white,
+:root[data-theme='dark'] .admin-dashboard-page .bg-white\/80,
+:root[data-theme='dark'] .admin-dashboard-page .bg-slate-50,
+:root[data-theme='dark'] .admin-dashboard-page .bg-slate-50\/70,
+:root[data-theme='dark'] .admin-dashboard-page .bg-slate-100 {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .text-slate-800,
+:root[data-theme='dark'] .admin-dashboard-page .text-slate-700,
+:root[data-theme='dark'] .admin-dashboard-page .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .text-slate-500,
+:root[data-theme='dark'] .admin-dashboard-page .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-tabs {
+  background-color: rgba(2, 6, 23, 0.88) !important;
+  border-color: rgba(148, 163, 184, 0.26) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-tabs nav button {
+  background-color: rgba(30, 41, 59, 0.92) !important;
+  color: #e2e8f0 !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-tabs nav button:hover {
+  background-color: rgba(51, 65, 85, 0.96) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-tabs nav button.bg-slate-950 {
+  background-color: #10b981 !important;
+  color: #052e16 !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page tr:hover {
+  background-color: rgba(30, 41, 59, 0.62) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .bg-red-50,
+:root[data-theme='dark'] .admin-dashboard-page .bg-red-100 {
+  background-color: rgba(127, 29, 29, 0.22) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .bg-emerald-50,
+:root[data-theme='dark'] .admin-dashboard-page .bg-emerald-100,
+:root[data-theme='dark'] .admin-dashboard-page .bg-emerald-50\/70 {
+  background-color: rgba(6, 78, 59, 0.24) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .bg-blue-50,
+:root[data-theme='dark'] .admin-dashboard-page .bg-blue-100,
+:root[data-theme='dark'] .admin-dashboard-page .bg-sky-50,
+:root[data-theme='dark'] .admin-dashboard-page .bg-sky-100 {
+  background-color: rgba(30, 64, 175, 0.22) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .text-emerald-800,
+:root[data-theme='dark'] .admin-dashboard-page .text-emerald-700,
+:root[data-theme='dark'] .admin-dashboard-page .text-emerald-600,
+:root[data-theme='dark'] .admin-dashboard-page .text-sky-800,
+:root[data-theme='dark'] .admin-dashboard-page .text-sky-700,
+:root[data-theme='dark'] .admin-dashboard-page .text-blue-700,
+:root[data-theme='dark'] .admin-dashboard-page .text-red-700,
+:root[data-theme='dark'] .admin-dashboard-page .text-red-600,
+:root[data-theme='dark'] .admin-dashboard-page .text-amber-700 {
+  color: #e2e8f0 !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page input,
+:root[data-theme='dark'] .admin-dashboard-page textarea,
+:root[data-theme='dark'] .admin-dashboard-page select {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  color: #f8fafc !important;
+  border-color: rgba(100, 116, 139, 0.55) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page input::placeholder,
+:root[data-theme='dark'] .admin-dashboard-page textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .shadow-slate-200\/60,
+:root[data-theme='dark'] .admin-dashboard-page .shadow-slate-200\/80,
+:root[data-theme='dark'] .admin-dashboard-page .shadow-emerald-200\/60 {
+  box-shadow: 0 20px 46px rgba(2, 6, 23, 0.4) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .ring-white {
+  --tw-ring-color: rgba(148, 163, 184, 0.55) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .admin-order-activity-item {
+  background-color: rgba(30, 41, 59, 0.78) !important;
+  border-color: rgba(148, 163, 184, 0.35) !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .admin-order-item-chip {
+  background-color: rgba(51, 65, 85, 0.9) !important;
+  color: #e2e8f0 !important;
+}
+
+:root[data-theme='dark'] .admin-dashboard-page .admin-order-status-chip {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+/* Component-scoped dark mode rules that work with Angular view encapsulation. */
+:host-context([data-theme='dark']) .admin-dashboard-page {
+  background:
+    radial-gradient(circle at top, rgba(16, 185, 129, 0.16), transparent 32%),
+    linear-gradient(180deg, #020617 0%, #0b1224 100%) !important;
+  color: #e2e8f0;
+}
+
+:host-context([data-theme='dark']) .admin-dashboard-page .bg-white,
+:host-context([data-theme='dark']) .admin-dashboard-page .bg-white\/80,
+:host-context([data-theme='dark']) .admin-dashboard-page .bg-slate-50,
+:host-context([data-theme='dark']) .admin-dashboard-page .bg-slate-50\/70,
+:host-context([data-theme='dark']) .admin-dashboard-page .bg-slate-100 {
+  background-color: rgba(15, 23, 42, 0.84) !important;
+}
+
+:host-context([data-theme='dark']) .admin-dashboard-page .border-slate-200,
+:host-context([data-theme='dark']) .admin-dashboard-page .border-slate-300,
+:host-context([data-theme='dark']) .admin-dashboard-page .border-dashed {
+  border-color: rgba(148, 163, 184, 0.32) !important;
+}
+
+:host-context([data-theme='dark']) .admin-dashboard-page .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+:host-context([data-theme='dark']) .admin-dashboard-page .text-slate-800,
+:host-context([data-theme='dark']) .admin-dashboard-page .text-slate-700,
+:host-context([data-theme='dark']) .admin-dashboard-page .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+:host-context([data-theme='dark']) .admin-dashboard-page .text-slate-500,
+:host-context([data-theme='dark']) .admin-dashboard-page .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+:host-context([data-theme='dark']) .admin-dashboard-page .admin-order-activity-item,
+:host-context([data-theme='dark']) .admin-dashboard-page article.bg-slate-50 {
+  background-color: rgba(30, 41, 59, 0.82) !important;
+  border-color: rgba(148, 163, 184, 0.36) !important;
+}
+
+:host-context([data-theme='dark']) .admin-dashboard-page .admin-order-item-chip {
+  background-color: rgba(51, 65, 85, 0.9) !important;
+  color: #e2e8f0 !important;
+}

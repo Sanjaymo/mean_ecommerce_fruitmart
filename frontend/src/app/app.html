@@ -1,0 +1,19 @@
+<div class="fm-shell min-h-screen" [class.fm-shell-busy]="motion.isBusy()">
+  <app-navbar />
+  @if (!network.isOnline()) {
+    <div class="fm-offline-banner fm-animate-slide-down" role="status" aria-live="polite">
+      <span>You are offline. Some actions may fail.</span>
+      <button type="button" (click)="network.retryConnection()" class="fm-hover-brightness">Retry</button>
+    </div>
+  }
+  <div class="fm-progress-rail" [class.fm-progress-rail-active]="motion.isBusy()">
+    <div class="fm-progress-wave"></div>
+  </div>
+  <div class="fm-stage-pill fm-glow-pulse" [class.fm-stage-pill-active]="motion.isBusy()">{{ motion.stageLabel() || 'Syncing experience' }}</div>
+  <div class="flex flex-col overflow-x-hidden pt-16">
+    <main class="flex-1 fm-animate-slide-up" [class.fm-main-transitioning]="motion.isNavigating()">
+      <router-outlet />
+    </main>
+    <app-footer />
+  </div>
+</div>

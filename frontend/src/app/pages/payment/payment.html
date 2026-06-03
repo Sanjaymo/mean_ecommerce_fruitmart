@@ -1,0 +1,152 @@
+<div class="fm-payment-page min-h-screen bg-slate-950 text-slate-100">
+  <div class="mx-auto max-w-2xl px-4 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <button
+        (click)="goBack()"
+        class="mb-4 flex items-center gap-1 text-sm font-medium text-sky-300 transition hover:text-sky-200"
+      >
+        ← Back to Cart
+      </button>
+      <h1 class="text-3xl font-bold text-white">Payment</h1>
+      <p class="mt-1 text-slate-300">Choose your preferred payment method</p>
+    </div>
+
+    <!-- Order Summary -->
+    @if (orderLoading()) {
+      <div class="mb-8 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-sky-950/20 backdrop-blur-xl">
+        <div class="fm-skeleton h-5 w-40"></div>
+        <div class="fm-skeleton mt-4 h-4 w-2/3"></div>
+        <div class="fm-skeleton mt-2 h-4 w-1/2"></div>
+        <div class="fm-skeleton mt-6 h-4 w-full"></div>
+        <div class="fm-skeleton mt-2 h-4 w-10/12"></div>
+      </div>
+    } @else if (orderDetails() && orderDetails()._id) {
+      <div class="mb-8 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-sky-950/20 backdrop-blur-xl">
+        <h2 class="mb-4 text-lg font-semibold text-white">Order Summary</h2>
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-slate-300">Items:</span>
+            <span class="font-medium">{{ orderDetails().items?.length || 0 }} item(s)</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-slate-300">Order ID:</span>
+            <span class="font-medium">{{ orderDetails()._id.slice(-8).toUpperCase() }}</span>
+          </div>
+        </div>
+
+        <!-- Items list -->
+        @if (orderDetails().items && orderDetails().items.length > 0) {
+          <div class="mb-4 border-t border-white/10 pt-4">
+            <div class="space-y-2 max-h-48 overflow-y-auto">
+              @for (item of orderDetails().items; track item.product) {
+                <div class="flex justify-between text-sm">
+                  <span class="text-slate-300">{{ item.name }} x{{ item.quantity }}</span>
+                  <span class="font-medium">{{ (item.price * item.quantity) | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (orderDetails().totalAmount) {
+          <div class="flex items-center justify-between border-t border-white/10 pt-4">
+            <span class="text-lg font-semibold text-white">Total Amount:</span>
+            <span class="text-2xl font-bold text-sky-300">{{ orderDetails().totalAmount | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Payment Methods -->
+    <div class="rounded-2xl border border-white/10 bg-slate-900/90 p-6 shadow-2xl shadow-sky-950/20 backdrop-blur-xl">
+      <h2 class="mb-4 text-lg font-semibold text-white">Select Payment Method</h2>
+
+      @if (paymentError()) {
+        <div class="mb-6 rounded-xl border border-rose-400/30 bg-rose-950/60 p-4">
+          <p class="text-sm font-semibold text-rose-100">⚠️ {{ paymentError() }}</p>
+        </div>
+      }
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        @for (method of paymentMethods; track method.id) {
+          <button
+            (click)="selectPaymentMethod(method.id)"
+            [ngClass]="{
+              'ring-2 ring-sky-400 bg-sky-950/60': selectedMethod() === method.id,
+              'border border-white/10 bg-white/5': selectedMethod() !== method.id,
+            }"
+            class="rounded-xl p-4 text-center transition duration-300 hover:-translate-y-0.5 hover:border-sky-300/40 hover:ring-1 hover:ring-sky-300/30 disabled:cursor-not-allowed disabled:opacity-50"
+            [disabled]="processingPayment()"
+          >
+            <div class="text-3xl mb-2">{{ method.icon }}</div>
+            <h3 class="font-semibold text-white">{{ method.name }}</h3>
+            <p class="mt-1 text-xs text-slate-300">{{ method.description }}</p>
+          </button>
+        }
+      </div>
+
+      <!-- Payment Details Info -->
+      @if (selectedMethod()) {
+        <div class="mb-6 rounded-xl border border-sky-400/20 bg-sky-950/60 p-4">
+          @switch (selectedMethod()) {
+            @case ('upi') {
+              <p class="text-sm text-sky-100">
+                <strong>UPI Payment:</strong> You'll be redirected to complete the payment using your preferred UPI app.
+              </p>
+            }
+            @case ('netbanking') {
+              <p class="text-sm text-sky-100">
+                <strong>Net Banking:</strong> Select your bank and log in to complete the payment securely.
+              </p>
+            }
+            @case ('card') {
+              <p class="text-sm text-sky-100">
+                <strong>Card Payment:</strong> Your payment details are encrypted and processed securely.
+              </p>
+            }
+            @case ('cod') {
+              <p class="text-sm text-sky-100">
+                <strong>Cash on Delivery:</strong> Pay to the delivery executive when you receive your order.
+              </p>
+            }
+          }
+        </div>
+      }
+
+      <!-- Action Buttons -->
+      <div class="fm-payment-actions flex gap-3">
+        <button
+          (click)="goBack()"
+          class="flex-1 rounded-xl border border-white/10 px-6 py-3 font-medium text-slate-200 transition hover:bg-white/5 disabled:opacity-50"
+          [disabled]="processingPayment()"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="processPayment()"
+          [disabled]="isPaymentDisabled()"
+          [ngClass]="{
+            'opacity-50 cursor-not-allowed': isPaymentDisabled(),
+            'hover:bg-green-700': !isPaymentDisabled(),
+          }"
+          class="flex-1 rounded-xl bg-gradient-to-r from-sky-600 via-blue-600 to-slate-950 px-6 py-3 font-medium text-white shadow-lg shadow-sky-950/25 transition duration-300"
+        >
+          @if (processingPayment()) {
+            <span class="flex items-center justify-center gap-2">
+              <span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              Processing...
+            </span>
+          } @else {
+            Proceed
+          }
+        </button>
+      </div>
+
+      <!-- Security Info -->
+      <p class="mt-6 text-center text-xs text-slate-400">
+        🔒 Your payment is secure and encrypted. We never store your card details.
+      </p>
+    </div>
+  </div>
+</div>

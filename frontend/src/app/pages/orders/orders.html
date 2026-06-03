@@ -1,0 +1,134 @@
+<div class="min-h-screen bg-gray-50 ">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6 ">My Orders</h1>
+
+    @if (isLoading()) {
+      <div class="space-y-4">
+        @for (_ of [1, 2, 3]; track _) {
+          <div class="bg-white rounded-xl shadow-sm p-6 ">
+            <div class="fm-skeleton h-5 w-48"></div>
+            <div class="fm-skeleton mt-3 h-4 w-28"></div>
+            <div class="fm-skeleton mt-5 h-3 w-full"></div>
+            <div class="fm-skeleton mt-2 h-3 w-10/12"></div>
+            <div class="fm-skeleton mt-2 h-3 w-8/12"></div>
+          </div>
+        }
+      </div>
+    } @else if (orders().length === 0) {
+      <div class="text-center py-20 bg-white rounded-xl shadow-sm ">
+        <div class="text-5xl mb-4">📦</div>
+        <h2 class="text-xl text-gray-500 mb-4 ">No orders yet</h2>
+        <a routerLink="/dashboard" class="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition">
+          Start Shopping
+        </a>
+      </div>
+    } @else {
+      <div class="space-y-4">
+        @for (order of orders(); track order._id) {
+          <div class="bg-white rounded-xl shadow-sm p-6 ">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+              <div>
+              <p class="font-semibold text-gray-900 ">Order #{{ order._id.slice(-8).toUpperCase() }}</p>
+              <p class="text-sm text-gray-500 ">{{ order.createdAt | date:'medium' }}</p>
+              </div>
+              <div class="sm:text-right">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-medium capitalize "
+                      [class]="getStatusClass(order.status)">
+                  {{ order.status }}
+                </span>
+                <p class="text-xl font-bold text-green-600 mt-1 ">{{ order.totalAmount | currency:'INR':'symbol':'1.2-2':'en-IN' }}</p>
+                <button
+                  type="button"
+                  (click)="toggleTracking(order._id)"
+                  class="mt-3 inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50     "
+                >
+                  {{ isTrackingOpen(order._id) ? 'Hide Tracking' : 'Track Order' }}
+                </button>
+                <a
+                  [routerLink]="['/order-tracking', order._id]"
+                  class="mt-2 ml-2 inline-flex items-center justify-center rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-semibold transition hover:bg-blue-700"
+                >
+                  Full Tracking 📍
+                </a>
+              </div>
+            </div>
+
+            <div class="border-t pt-4 space-y-3">
+              @for (item of order.items; track item.name) {
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  @if (item.image) {
+                    <img [ngSrc]="item.image" [alt]="item.name" width="48" height="48" class="w-12 h-12 rounded-lg object-cover" loading="lazy" decoding="async" />
+                  }
+                  <div class="flex-1">
+                    <p class="font-medium text-gray-900">{{ item.name }}</p>
+                    <p class="text-sm text-gray-500">{{ item.price | currency:'INR':'symbol':'1.2-2':'en-IN' }} × {{ item.quantity }}</p>
+                  </div>
+                  <p class="font-semibold text-gray-900 sm:text-right">{{ item.price * item.quantity | currency:'INR':'symbol':'1.2-2':'en-IN' }}</p>
+                </div>
+              }
+
+              @if (order.deliveryLocation) {
+                <div class="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
+                  <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Delivery Location</p>
+                  <p class="mt-1 text-sm font-medium text-slate-800">
+                    {{ order.deliveryLocation.formattedAddress || (order.deliveryLocation.addressLine + ', ' + order.deliveryLocation.city + ', ' + order.deliveryLocation.state + ' - ' + order.deliveryLocation.pincode + ', ' + order.deliveryLocation.country) }}
+                  </p>
+                  <p class="mt-1 text-xs text-slate-500">Pin: {{ order.deliveryLocation.lat }}, {{ order.deliveryLocation.lng }}</p>
+                </div>
+              }
+            </div>
+
+            @if (isTrackingOpen(order._id)) {
+              <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Tracking ID</p>
+                    <p class="text-sm font-semibold text-slate-900">FM-{{ order._id.slice(-8).toUpperCase() }}</p>
+                  </div>
+                  @if (order.status !== 'cancelled') {
+                    <p class="text-sm text-slate-600">
+                      Estimated delivery: <span class="font-semibold text-slate-900">{{ getEstimatedDelivery(order.createdAt, order.status) | date:'EEE, d MMM • h:mm a' }}</span>
+                    </p>
+                  } @else {
+                    <p class="text-sm font-semibold text-red-600">This order has been cancelled.</p>
+                  }
+                </div>
+
+                <div class="mt-4">
+                  <div class="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                    <div
+                      class="h-full rounded-full bg-linear-to-r from-emerald-500 to-blue-500 transition-all duration-500"
+                      [style.width.%]="getProgressPercent(order.status)"
+                    ></div>
+                  </div>
+                  <p class="mt-2 text-xs font-medium text-slate-500">Progress: {{ getProgressPercent(order.status) }}%</p>
+                </div>
+
+                <div class="mt-5 space-y-4">
+                  @for (step of getTrackingTimeline(order); track step.label) {
+                    <div class="flex items-start gap-3">
+                      <span
+                        class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold"
+                        [class]="step.complete ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500'"
+                      >
+                        {{ step.complete ? '✓' : '•' }}
+                      </span>
+                      <div>
+                        <p class="text-sm font-semibold"
+                           [class]="step.current ? 'text-slate-900' : 'text-slate-700'">
+                          {{ step.label }}
+                        </p>
+                        <p class="text-xs text-slate-500">{{ step.description }}</p>
+                        <p class="text-xs text-slate-500">{{ step.date | date:'medium' }}</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,175 @@
+<nav class="fixed left-0 right-0 top-0 z-1200 border-b border-white/10 bg-slate-950/70 text-white shadow-[0_16px_40px_rgba(2,6,23,0.25)] backdrop-blur-2xl transition-all duration-300">
+   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between gap-4">
+         <a routerLink="/" class="fm-hover-lift cursor-pointer inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-lg font-semibold tracking-tight text-white shadow-lg shadow-black/10">
+            <img ngSrc="/logo.png?v=3" width="32" height="32" alt="FruitMart logo" class="fm-hover-scale h-8 w-8 rounded-full object-cover shadow-sm" />
+            <span>FruitMart</span>
+         </a>
+
+         <div class="hidden items-center gap-2 md:flex" (mouseenter)="cancelScheduledClose()" (mouseleave)="scheduleDesktopMenuClose()">
+            @if (!isLoggedIn()) {
+               <a routerLink="/" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" [routerLinkActiveOptions]="{ exact: true }" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">Home</a>
+               <a routerLink="/about" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">About</a>
+               <a routerLink="/contact" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">Contact</a>
+               <a routerLink="/login" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">Login</a>
+            } @else if (isAdmin()) {
+               <a routerLink="/admin" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">Admin Dashboard</a>
+               <span class="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200">Hello, {{ userName() }}</span>
+               <button (click)="logout()" class="fm-hover-lift cursor-pointer rounded-full bg-rose-500 px-4 py-2 text-sm font-semibold text-white">Logout</button>
+            } @else {
+               <a routerLink="/dashboard" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">Dashboard</a>
+               @if (isSeller()) {
+                  <a routerLink="/seller-dashboard" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">Seller Hub</a>
+               }
+               @if (hasSellerApplication() && !isSeller()) {
+                  <a routerLink="/become-seller" [class]="sellerStatusChipClass()" class="fm-hover-lift cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold tracking-wide">{{ sellerStatusLabel() }}</a>
+               }
+               <a routerLink="/cart" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">Cart</a>
+               <a routerLink="/track-order" routerLinkActive="bg-white text-slate-950 shadow-lg shadow-black/10" class="fm-hover-brightness cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-slate-200">Track Order</a>
+
+               <div class="relative" (mouseenter)="cancelScheduledClose()" (mouseleave)="scheduleDesktopMenuClose()">
+                  <button type="button" (click)="toggleAccountMenu()" class="fm-hover-lift cursor-pointer inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white">
+                     <span>{{ userName() }}</span>
+                     <svg class="fm-icon-bounce h-4 w-4 text-slate-300 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.512a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+                     </svg>
+                  </button>
+
+                  @if (accountMenuOpen()) {
+                     <div class="fm-animate-fade-in absolute right-0 top-full w-72 pt-2">
+                        <div class="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 shadow-[0_24px_60px_rgba(15,23,42,0.18)] backdrop-blur-2xl">
+                           <div class="border-b border-slate-200 bg-slate-50/90 px-4 py-3">
+                              <p class="text-base font-semibold text-slate-900">Your Account</p>
+                           </div>
+                           <div class="fm-stagger-container space-y-0 p-2 text-[13px] leading-5 text-slate-700">
+                              <a routerLink="/profile" (click)="onNavigateFromMenu()" class="fm-hover-scale block cursor-pointer rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">My Profile</a>
+                              <a routerLink="/orders" (click)="onNavigateFromMenu()" class="fm-hover-scale block cursor-pointer rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">Orders</a>
+                              <a routerLink="/account-center" [queryParams]="{ tab: 'coupons' }" (click)="onNavigateFromMenu()" class="fm-hover-scale block cursor-pointer rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">Coupons</a>
+                              <a routerLink="/account-center" [queryParams]="{ tab: 'wishlist' }" (click)="onNavigateFromMenu()" class="fm-hover-scale block cursor-pointer rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">Wishlist</a>
+                              <a routerLink="/account-center" [queryParams]="{ tab: 'addresses' }" (click)="onNavigateFromMenu()" class="fm-hover-scale block cursor-pointer rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">Saved Addresses</a>
+                              <button (click)="logout()" class="fm-hover-lift cursor-pointer mt-2 w-full rounded-2xl border border-rose-200 bg-rose-50 px-3 py-2 text-left font-medium text-rose-700 hover:bg-rose-100">Logout</button>
+                           </div>
+                        </div>
+                     </div>
+                  }
+               </div>
+
+               <div class="relative" (mouseenter)="cancelScheduledClose()" (mouseleave)="scheduleDesktopMenuClose()">
+                  <button type="button" (click)="toggleMoreMenu()" class="fm-hover-lift cursor-pointer inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold transition-all duration-300">
+                     <span>More</span>
+                     <svg class="fm-icon-bounce h-4 w-4 text-slate-300 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.512a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+                     </svg>
+                  </button>
+
+                  @if (moreMenuOpen()) {
+                     <div class="fm-animate-fade-in absolute right-0 top-full w-72 pt-2">
+                        <div class="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 shadow-[0_24px_60px_rgba(15,23,42,0.18)] backdrop-blur-2xl">
+                           <div class="border-b border-slate-200 bg-slate-50/90 px-4 py-3">
+                              <p class="text-base font-semibold text-slate-900">More</p>
+                           </div>
+                           <div class="fm-stagger-container space-y-0 p-2 text-[13px] leading-5 text-slate-700">
+                              @if (isSeller()) {
+                                 <a routerLink="/seller-dashboard" (click)="onNavigateFromMenu()" class="fm-hover-scale block rounded-2xl px-3 py-2 font-semibold text-emerald-700 hover:bg-slate-100/80 hover:text-emerald-900">Seller Hub</a>
+                              } @else {
+                                 <a routerLink="/become-seller" (click)="onNavigateFromMenu()" class="fm-hover-scale block rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">Become a Seller</a>
+                              }
+                              <a routerLink="/more-center" [queryParams]="{ tab: 'notifications' }" (click)="onNavigateFromMenu()" class="fm-hover-scale block rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">Notification Settings</a>
+                              <a routerLink="/more-center" [queryParams]="{ tab: 'care' }" (click)="onNavigateFromMenu()" class="fm-hover-scale block rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">24x7 Customer Care</a>
+                              <a routerLink="/more-center" [queryParams]="{ tab: 'advertise' }" (click)="onNavigateFromMenu()" class="fm-hover-scale block rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">Advertise on FruitMart</a>
+                              <a routerLink="/more-center" [queryParams]="{ tab: 'postad' }" (click)="onNavigateFromMenu()" class="fm-hover-scale block rounded-2xl px-3 py-2 text-slate-700 hover:bg-slate-100/80 hover:text-slate-950">Post Your Ad</a>
+                              <p class="mt-2 px-3 py-2 text-xs text-slate-500">Customer Care: 1800-208-9988 | Seller Help: 1800-119-441</p>
+                           </div>
+                        </div>
+                     </div>
+                  }
+               </div>
+
+               <button (click)="logout()" class="fm-hover-lift rounded-full bg-rose-500 px-4 py-2 text-sm font-semibold text-white">Logout</button>
+            }
+
+            <!-- theme switching removed: app runs in light mode only -->
+         </div>
+
+         <div class="flex items-center gap-2 md:hidden">
+            <!-- mobile theme toggle removed -->
+
+            <button (click)="toggleMenu()" class="fm-hover-scale cursor-pointer inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 p-2.5 transition-all duration-300 focus:outline-none">
+               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  @if (menuOpen()) {
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  } @else {
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                  }
+               </svg>
+            </button>
+         </div>
+      </div>
+
+      @if (menuOpen()) {
+         <div class="space-y-1 border-t border-white/10 py-3 md:hidden">
+            @if (!isLoggedIn()) {
+               <a routerLink="/" (click)="onNavigateFromMenu()" routerLinkActive="bg-white text-slate-950" [routerLinkActiveOptions]="{ exact: true }" class="block cursor-pointer rounded-2xl px-3 py-2 text-base font-medium transition hover:bg-white/10 hover:text-white">Home</a>
+               <a routerLink="/about" (click)="onNavigateFromMenu()" routerLinkActive="bg-white text-slate-950" class="block cursor-pointer rounded-2xl px-3 py-2 text-base font-medium transition hover:bg-white/10 hover:text-white">About</a>
+               <a routerLink="/contact" (click)="onNavigateFromMenu()" routerLinkActive="bg-white text-slate-950" class="block cursor-pointer rounded-2xl px-3 py-2 text-base font-medium transition hover:bg-white/10 hover:text-white">Contact</a>
+               <a routerLink="/login" (click)="onNavigateFromMenu()" routerLinkActive="bg-white text-slate-950" class="block cursor-pointer rounded-2xl px-3 py-2 text-base font-medium transition hover:bg-white/10 hover:text-white">Login</a>
+            } @else if (isAdmin()) {
+               <a routerLink="/admin" (click)="onNavigateFromMenu()" routerLinkActive="bg-white text-slate-950" class="block cursor-pointer rounded-2xl px-3 py-2 text-base font-medium transition hover:bg-white/10 hover:text-white">Admin Dashboard</a>
+               <button (click)="logout()" class="block cursor-pointer w-full rounded-2xl bg-rose-500 px-3 py-2 text-left text-base font-semibold text-white transition hover:bg-rose-600">Logout</button>
+            } @else {
+               <a routerLink="/dashboard" (click)="onNavigateFromMenu()" routerLinkActive="bg-white text-slate-950" class="block cursor-pointer rounded-2xl px-3 py-2 text-base font-medium transition hover:bg-white/10 hover:text-white">Dashboard</a>
+               <a routerLink="/cart" (click)="onNavigateFromMenu()" routerLinkActive="bg-white text-slate-950" class="block cursor-pointer rounded-2xl px-3 py-2 text-base font-medium transition hover:bg-white/10 hover:text-white">Cart</a>
+               <a routerLink="/track-order" (click)="onNavigateFromMenu()" routerLinkActive="bg-white text-slate-950" class="block cursor-pointer rounded-2xl px-3 py-2 text-base font-medium transition hover:bg-white/10 hover:text-white">Track Order</a>
+               @if (hasSellerApplication() && !isSeller()) {
+                  <div class="px-3 py-2">
+                     <a routerLink="/become-seller" (click)="onNavigateFromMenu()" [class]="sellerStatusChipClass()" class="inline-flex cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold tracking-wide">{{ sellerStatusLabel() }}</a>
+                  </div>
+               }
+
+               <p class="mt-3 border-t border-white/10 px-3 pt-3 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Your account</p>
+               <a routerLink="/profile" (click)="onNavigateFromMenu()" class="mt-1 block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">My Profile</a>
+               <a routerLink="/orders" (click)="onNavigateFromMenu()" class="block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">Orders</a>
+               <a routerLink="/account-center" [queryParams]="{ tab: 'coupons' }" (click)="onNavigateFromMenu()" class="block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">Coupons</a>
+               <a routerLink="/account-center" [queryParams]="{ tab: 'wishlist' }" (click)="onNavigateFromMenu()" class="block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">Wishlist</a>
+               <a routerLink="/account-center" [queryParams]="{ tab: 'addresses' }" (click)="onNavigateFromMenu()" class="block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">Saved Addresses</a>
+
+               <p class="border-t border-white/10 px-3 pt-3 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">More</p>
+               @if (isSeller()) {
+                  <a routerLink="/seller-dashboard" (click)="onNavigateFromMenu()" class="mt-1 block rounded-2xl px-3 py-2 text-sm font-medium text-emerald-300 transition hover:bg-white/10">Seller Hub</a>
+               } @else {
+                  <a routerLink="/become-seller" (click)="onNavigateFromMenu()" class="mt-1 block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">Become a Seller</a>
+               }
+               <a routerLink="/more-center" [queryParams]="{ tab: 'notifications' }" (click)="onNavigateFromMenu()" class="block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">Notification Settings</a>
+               <a routerLink="/more-center" [queryParams]="{ tab: 'care' }" (click)="onNavigateFromMenu()" class="block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">24x7 Customer Care</a>
+               <a routerLink="/more-center" [queryParams]="{ tab: 'advertise' }" (click)="onNavigateFromMenu()" class="block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">Advertise on FruitMart</a>
+               <a routerLink="/more-center" [queryParams]="{ tab: 'postad' }" (click)="onNavigateFromMenu()" class="block rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">Post Your Ad</a>
+               <p class="px-3 pt-2 text-xs text-slate-400">Customer Care: 1800-208-9988 | Seller Help: 1800-119-441</p>
+               <button (click)="logout()" class="mt-2 block w-full rounded-2xl bg-rose-500 px-3 py-2 text-left text-base font-semibold text-white transition hover:bg-rose-600">Logout</button>
+            }
+         </div>
+      }
+   </div>
+</nav>
+
+@if (logoutConfirmOpen()) {
+   <div class="fm-logout-overlay fixed inset-0 z-1300 flex items-center justify-center px-4" (click)="cancelLogout()">
+      <div class="fm-logout-dialog w-full max-w-md rounded-3xl p-6" (click)="$event.stopPropagation()">
+         <h2 class="text-xl font-bold tracking-tight">Confirm Logout</h2>
+         <p class="mt-2 text-sm text-slate-300">
+            Are you sure you want to logout from your account?
+         </p>
+         <p class="mt-1 text-xs text-slate-400">
+            You will need to sign in again to continue.
+         </p>
+
+         <div class="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <button type="button" (click)="cancelLogout()" class="fm-logout-cancel rounded-full px-4 py-2 text-sm font-semibold transition">
+               Cancel
+            </button>
+            <button type="button" (click)="confirmLogout()" class="fm-logout-confirm rounded-full px-4 py-2 text-sm font-semibold transition">
+               Confirm Logout
+            </button>
+         </div>
+      </div>
+   </div>
+}

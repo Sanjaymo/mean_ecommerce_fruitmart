@@ -1,0 +1,207 @@
+/* ─── Major Page Revamp ───────────────────────────────────────────────────── */
+
+app-about > .min-h-screen,
+app-services .fm-services-page,
+app-contact .fm-contact-page,
+app-dashboard > .min-h-screen,
+app-cart .fm-cart-page,
+app-orders > .min-h-screen,
+app-profile > .min-h-screen,
+app-payment .fm-payment-page,
+app-account-center > section,
+app-privacy > .min-h-screen,
+app-terms > .min-h-screen,
+app-order-tracking > .min-h-screen,
+app-order-confirmation > .min-h-screen,
+app-delivery-location > .min-h-screen {
+  background:
+    radial-gradient(900px 450px at 4% -8%, rgba(16, 185, 129, 0.1), transparent 65%),
+    radial-gradient(860px 420px at 98% 0%, rgba(14, 165, 233, 0.1), transparent 64%),
+    linear-gradient(180deg, #f4faf6, #edf6f1);
+}
+
+app-dashboard .sticky.top-0 {
+  backdrop-filter: blur(12px);
+  background: linear-gradient(130deg, rgba(255, 255, 255, 0.88), rgba(243, 252, 247, 0.88));
+  border-color: #d6e8da;
+}
+
+app-dashboard .grid.grid-cols-1 > div.bg-white,
+app-orders .bg-white.rounded-xl,
+app-profile .bg-white.rounded-xl,
+app-payment .bg-white.rounded-xl,
+app-account-center .bg-white,
+app-privacy .bg-white,
+app-terms .bg-white,
+app-about .bg-white.rounded-xl,
+app-contact .bg-white.rounded-xl,
+app-cart .bg-white.rounded-xl {
+  border: 1px solid #d8e7da;
+  background: linear-gradient(180deg, #ffffff, #f8fdf9);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+}
+
+app-dashboard .grid.grid-cols-1 > div.bg-white:hover,
+app-orders .bg-white.rounded-xl:hover,
+app-about .bg-white.rounded-xl:hover,
+app-contact .bg-white.rounded-xl:hover,
+app-profile .bg-white.rounded-xl:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.12);
+}
+
+app-dashboard .mb-6.rounded-2xl,
+app-dashboard .mb-6.rounded-xl,
+app-cart .mb-6.rounded-xl,
+app-orders .rounded-xl.border,
+app-profile .bg-green-50,
+app-payment .bg-blue-50,
+app-help-center .rounded-xl.border-emerald-200 {
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.07);
+}
+
+app-about > .min-h-screen > .bg-green-700,
+app-contact .fm-contact-hero,
+app-privacy > .min-h-screen > .bg-slate-900,
+app-terms > .min-h-screen > .bg-slate-900 {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(125deg, rgba(6, 95, 70, 0.95), rgba(14, 116, 144, 0.9)),
+    radial-gradient(440px 230px at 12% 6%, rgba(255, 255, 255, 0.2), transparent 66%);
+}
+
+:root[data-theme='light'] app-about > .min-h-screen > .bg-green-700,
+:root[data-theme='light'] app-contact .fm-contact-hero,
+:root[data-theme='light'] app-privacy > .min-h-screen > .bg-slate-900,
+:root[data-theme='light'] app-terms > .min-h-screen > .bg-slate-900 {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 250, 246, 0.98)),
+    radial-gradient(440px 230px at 12% 6%, rgba(99, 102, 241, 0.1), transparent 66%);
+}
+
+:root[data-theme='light'] app-about > .min-h-screen > .bg-green-700::before,
+:root[data-theme='light'] app-contact .fm-contact-hero::before,
+:root[data-theme='light'] app-privacy > .min-h-screen > .bg-slate-900::before,
+:root[data-theme='light'] app-terms > .min-h-screen > .bg-slate-900::before {
+  opacity: 0.12;
+}
+
+app-about > .min-h-screen > .bg-green-700::before,
+app-contact .fm-contact-hero::before,
+app-privacy > .min-h-screen > .bg-slate-900::before,
+app-terms > .min-h-screen > .bg-slate-900::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+app-dashboard h1,
+app-cart h1,
+app-orders h1,
+app-profile h1,
+app-payment h1,
+app-about h1,
+app-services h1,
+app-contact h1,
+app-help-center h1 {
+  letter-spacing: -0.03em;
+}
+
+app-dashboard .grid.grid-cols-1 > div.bg-white,
+app-about .grid.sm\:grid-cols-3 > div,
+app-orders .space-y-4 > div,
+app-profile .space-y-4 > div,
+app-contact .space-y-6 > div,
+app-payment .grid.grid-cols-1.sm\:grid-cols-2 > button,
+app-services .md\:grid-cols-2 > article {
+  animation: fm-slide-up 440ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+app-services .fm-services-hero {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(242, 252, 247, 0.9)),
+    radial-gradient(360px 210px at 8% 8%, rgba(16, 185, 129, 0.12), transparent 64%);
+}
+
+/* Staggered animation delays for cards */
+app-dashboard .grid.grid-cols-1 > div.bg-white:nth-child(1),
+app-about .grid.sm\:grid-cols-3 > div:nth-child(1),
+app-orders .space-y-4 > div:nth-child(1),
+app-profile .space-y-4 > div:nth-child(1),
+app-contact .space-y-6 > div:nth-child(1),
+app-payment .grid.grid-cols-1.sm\:grid-cols-2 > button:nth-child(1),
+app-services .md\:grid-cols-2 > article:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+app-dashboard .grid.grid-cols-1 > div.bg-white:nth-child(2),
+app-about .grid.sm\:grid-cols-3 > div:nth-child(2),
+app-orders .space-y-4 > div:nth-child(2),
+app-profile .space-y-4 > div:nth-child(2),
+app-contact .space-y-6 > div:nth-child(2),
+app-payment .grid.grid-cols-1.sm\:grid-cols-2 > button:nth-child(2),
+app-services .md\:grid-cols-2 > article:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+app-dashboard .grid.grid-cols-1 > div.bg-white:nth-child(3),
+app-about .grid.sm\:grid-cols-3 > div:nth-child(3),
+app-orders .space-y-4 > div:nth-child(3),
+app-profile .space-y-4 > div:nth-child(3),
+app-contact .space-y-6 > div:nth-child(3),
+app-payment .grid.grid-cols-1.sm\:grid-cols-2 > button:nth-child(3),
+app-services .md\:grid-cols-2 > article:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+app-dashboard .grid.grid-cols-1 > div.bg-white:nth-child(4),
+app-about .grid.sm\:grid-cols-3 > div:nth-child(4),
+app-orders .space-y-4 > div:nth-child(4),
+app-profile .space-y-4 > div:nth-child(4),
+app-contact .space-y-6 > div:nth-child(4),
+app-payment .grid.grid-cols-1.sm\:grid-cols-2 > button:nth-child(4),
+app-services .md\:grid-cols-2 > article:nth-child(4) {
+  animation-delay: 210ms;
+}
+
+app-cart .fm-cart-summary,
+app-payment .fm-payment-actions,
+app-orders .rounded-xl.border-slate-200.bg-slate-50 {
+  border-color: #d4e3d6 !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 252, 248, 0.95));
+}
+
+app-account-center > section > .mx-auto {
+  animation: fm-fade-up 360ms ease-out;
+}
+
+app-order-tracking .bg-white,
+app-order-confirmation .bg-white,
+app-delivery-location .bg-white {
+  border: 1px solid #d7e5da;
+  box-shadow: 0 15px 30px rgba(15, 23, 42, 0.09);
+}
+
+@media (max-width: 768px) {
+  app-dashboard .sticky.top-0 {
+    top: 60px;
+  }
+
+  app-services .fm-services-page,
+  app-about > .min-h-screen,
+  app-contact .fm-contact-page,
+  app-orders > .min-h-screen,
+  app-profile > .min-h-screen {
+    background:
+      radial-gradient(640px 320px at 8% -8%, rgba(16, 185, 129, 0.11), transparent 64%),
+      radial-gradient(620px 300px at 94% 0%, rgba(14, 165, 233, 0.11), transparent 63%),
+      linear-gradient(180deg, #f4faf6, #eef7f2);
+  }
+}

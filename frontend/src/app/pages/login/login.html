@@ -1,0 +1,113 @@
+<section class="fm-page-shell fm-auth-shell fm-auth-template">
+  <div class="fm-auth-frame">
+    <main class="fm-auth-main fm-auth-form-panel fm-animate-slide-left">
+      <div class="fm-auth-tabs fm-stagger-container" role="tablist" aria-label="Authentication tabs">
+        <a routerLink="/login" class="fm-hover-brightness cursor-pointer is-active">Sign In</a>
+        <a routerLink="/register" class="fm-hover-brightness cursor-pointer">Sign Up</a>
+        <a routerLink="/forgot-password" class="fm-hover-brightness cursor-pointer">Password recovery</a>
+      </div>
+
+      <div class="fm-auth-brand-row fm-animate-slide-up" style="animation-delay: 80ms;">
+        <img ngSrc="/logo.png?v=3" width="96" height="30" alt="FruitMart logo" class="fm-hover-scale h-7 w-auto object-contain" />
+        <h1 class="fm-auth-title fm-text-animate">Sign In</h1>
+      </div>
+
+      <p class="fm-auth-subtitle fm-animate-slide-up fm-text-blur-animate" style="animation-delay: 160ms;">
+        Continue with your customer or admin account.
+      </p>
+
+      <div class="fm-auth-segment fm-animate-slide-up" role="tablist" aria-label="Login mode" style="animation-delay: 240ms;">
+        <button type="button" (click)="isAdmin() && toggleMode()" [class.is-active]="!isAdmin()" class="fm-hover-lift cursor-pointer">Customer</button>
+        <button type="button" (click)="!isAdmin() && toggleMode()" [class.is-active]="isAdmin()" class="fm-hover-lift cursor-pointer">Admin</button>
+      </div>
+
+      <div *ngIf="error()" class="fm-animate-bounce-in mt-4 rounded-xl border border-rose-700/30 bg-rose-50 px-3 py-2 text-sm text-rose-800 shadow-sm">
+        {{ error() }}
+      </div>
+
+      <div *ngIf="success()" class="fm-animate-bounce-in mt-4 rounded-xl border border-emerald-700/30 bg-emerald-50 px-3 py-2 text-sm text-emerald-900 shadow-sm">
+        {{ success() }}
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="fm-animate-slide-up space-y-4 mt-5" style="animation-delay: 320ms;">
+        <div class="fm-animate-slide-up" style="animation-delay: 0ms;">
+          <label class="fm-auth-label" for="login-identifier">Email or phone</label>
+          <input id="login-identifier" type="text" [ngModel]="identifier()" (ngModelChange)="identifier.set($event)" name="identifier" placeholder="you@example.com or phone" class="fm-input fm-hover-glow" required />
+        </div>
+
+        <div class="fm-animate-slide-up" style="animation-delay: 80ms;">
+          <div class="fm-auth-field-header-row mb-2">
+            <label class="fm-auth-label" for="login-password">Password</label>
+            <a routerLink="/forgot-password" class="fm-auth-field-link fm-hover-brightness cursor-pointer">Forgot password?</a>
+          </div>
+          <div class="fm-password-wrap">
+            <input id="login-password" [type]="showPassword() ? 'text' : 'password'" [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" placeholder="Enter your password" class="fm-input fm-hover-glow" required />
+            <button type="button" (click)="showPassword.update(v => !v)" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'" class="fm-icon-button fm-auth-toggle fm-hover-scale cursor-pointer">
+              <ng-container *ngIf="showPassword(); else showEye">
+                <svg class="h-5 w-5 fm-icon-bounce transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.584 10.587A2 2 0 0013.412 13.4"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.88 5.094A10.955 10.955 0 0112 4.91c5.053 0 9.27 3.11 10.5 7.09a10.96 10.96 0 01-4.043 5.135M6.228 6.228A10.945 10.945 0 001.5 12c1.23 3.98 5.447 7.09 10.5 7.09 1.61 0 3.141-.316 4.535-.89"/>
+                </svg>
+              </ng-container>
+              <ng-template #showEye>
+                <svg class="h-5 w-5 fm-icon-bounce transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.46 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.54 7-1.272 4.057-5.062 7-9.54 7-4.478 0-8.268-2.943-9.54-7z"/>
+                  <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </ng-template>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="loading()" class="fm-auth-submit fm-hover-lift fm-animate-slide-up" style="animation-delay: 160ms;">
+          <ng-container *ngIf="loading(); else notLoading">
+            <span class="flex items-center gap-2">
+              <svg class="fm-icon-spin w-4 h-4">
+                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" opacity="0.25"/>
+                <path d="M12 2A10 10 0 0 1 22 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>Signing in...</span>
+            </span>
+          </ng-container>
+          <ng-template #notLoading>
+            <span>Sign in</span>
+          </ng-template>
+        </button>
+      </form>
+
+      <ng-container *ngIf="!isAdmin()">
+        <div class="fm-auth-divider fm-animate-slide-up" style="animation-delay: 240ms;">
+          <span></span>
+          <p>Or sign in with Google</p>
+          <span></span>
+        </div>
+
+        <div class="fm-auth-social-row fm-animate-slide-up fm-hover-lift" style="animation-delay: 320ms;">
+          <div id="google-signin-target" class="w-full"></div>
+        </div>
+
+        <div *ngIf="!googleEnabled()" class="fm-animate-slide-up mt-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300" style="animation-delay: 400ms;">
+          Google sign-in will appear after setting your Google Client ID.
+        </div>
+      </ng-container>
+
+      <p class="mt-5 text-center text-sm fm-auth-footer-note fm-animate-fade-in" style="animation-delay: 480ms;">
+        New user?
+        <a routerLink="/register" class="fm-auth-inline-link fm-hover-brightness cursor-pointer">Create account</a>
+      </p>
+    </main>
+
+    <aside class="fm-auth-media fm-animate-slide-right" style="animation-delay: 200ms;">
+      <div class="fm-auth-media-panel">
+        <div class="fm-auth-media-top">
+          <a routerLink="/" class="fm-auth-back-link fm-hover-brightness cursor-pointer">Back to website</a>
+        </div>
+        <div class="fm-auth-media-art fm-animate-zoom-in" style="animation-delay: 400ms;"></div>
+        <div class="fm-auth-media-caption fm-text-blur-animate" style="animation-delay: 600ms;">
+          <p>Freshness you can taste, delivered to your doorstep.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>

@@ -1,0 +1,120 @@
+<div class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="mx-auto max-w-2xl px-4 py-8">
+    @if (loading()) {
+      <!-- Loading State -->
+      <div class="text-center py-20">
+        <div class="inline-block h-12 w-12 rounded-full border-4 border-sky-400/20 border-t-sky-400 animate-spin"></div>
+        <p class="mt-4 text-slate-300">Loading order details...</p>
+      </div>
+    } @else if (error()) {
+      <!-- Error State -->
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl shadow-sky-950/20 backdrop-blur-xl">
+        <div class="text-5xl mb-4">❌</div>
+        <h1 class="mb-2 text-2xl font-bold text-rose-300">Order Loading Failed</h1>
+        <p class="mb-6 text-slate-300">{{ error() }}</p>
+        <button (click)="continueShopping()" class="inline-block cursor-pointer rounded-xl bg-gradient-to-r from-sky-600 via-blue-600 to-slate-950 px-6 py-3 font-medium text-white transition duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-sky-950/20">
+          Back to Shopping
+        </button>
+      </div>
+    } @else if (orderDetails()) {
+      <!-- Success State -->
+      <div class="mb-8 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-950/80 via-slate-950 to-slate-950 p-8 text-center shadow-2xl shadow-emerald-900/30 backdrop-blur-xl">
+        <div class="text-6xl mb-4 inline-block" style="animation: flipConfirm 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) both; transform-origin: center;">✅</div>
+        <h1 class="mb-2 text-3xl font-bold text-emerald-300">Order Confirmed!</h1>
+        <p class="text-lg text-slate-300">Thank you for your purchase. Your order is confirmed and will be prepared shortly.</p>
+
+        <!-- Order Info Box -->
+        <div class="mt-6 rounded-xl border-2 border-emerald-400/40 bg-gradient-to-r from-emerald-600/90 via-emerald-500/85 to-emerald-600/90 p-6 text-left shadow-lg shadow-emerald-900/40" style="animation: slideDown 0.6s ease-out both;">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="mb-1 text-sm text-emerald-900 font-medium">Order ID</p>
+              <p class="text-xl font-bold text-white">{{ orderDetails()._id.slice(-8).toUpperCase() }}</p>
+            </div>
+            <div>
+              <p class="mb-1 text-sm text-emerald-900 font-medium">Order Date</p>
+              <p class="text-xl font-bold text-white">
+                {{ orderDetails().createdAt | date:'MMM dd, yyyy' }}
+              </p>
+            </div>
+            <div>
+              <p class="mb-1 text-sm text-emerald-900 font-medium">Total Amount</p>
+              <p class="text-2xl font-bold text-white">
+                {{ orderDetails().totalAmount | currency:'INR':'symbol':'1.2-2':'en-IN' }}
+              </p>
+            </div>
+            <div>
+              <p class="mb-1 text-sm text-emerald-900 font-medium">Status</p>
+              <p class="text-xl font-bold text-white uppercase tracking-wider">{{ orderDetails().status }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="mt-8" style="animation: slideDown 0.7s ease-out both; animation-delay: 0.1s;">
+          <h2 class="mb-4 text-lg font-semibold text-emerald-300 text-left">📦 Order Items</h2>
+          <div class="overflow-hidden rounded-lg border-2 border-emerald-400 bg-white shadow-lg shadow-emerald-600/30">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="bg-emerald-600 border-b-2 border-emerald-400">
+                  <tr>
+                    <th class="px-4 py-3 text-left font-semibold text-white">Item</th>
+                    <th class="px-4 py-3 text-center font-semibold text-white">Qty</th>
+                    <th class="px-4 py-3 text-right font-semibold text-white">Price</th>
+                    <th class="px-4 py-3 text-right font-semibold text-white">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of orderDetails().items; track item.product) {
+                    <tr class="border-t border-emerald-200 hover:bg-emerald-50 transition">
+                      <td class="px-4 py-3 text-slate-900 font-medium">{{ item.name }}</td>
+                      <td class="px-4 py-3 text-center text-slate-700">{{ item.quantity }}</td>
+                      <td class="px-4 py-3 text-right text-slate-700">
+                        {{ item.price | currency:'INR':'symbol':'1.2-2':'en-IN' }}
+                      </td>
+                      <td class="px-4 py-3 text-right font-semibold text-slate-900">
+                        {{ (item.price * item.quantity) | currency:'INR':'symbol':'1.2-2':'en-IN' }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Location -->
+        <div class="mt-8 text-left" style="animation: slideDown 0.8s ease-out both; animation-delay: 0.2s;">
+          <h2 class="mb-4 text-lg font-semibold text-emerald-300">📍 Delivery Location</h2>
+          <div class="rounded-lg border-2 border-emerald-400 bg-white p-5 shadow-lg shadow-emerald-600/30">
+            <p class="font-semibold text-slate-900 text-base">{{ orderDetails().deliveryLocation.formattedAddress || orderDetails().deliveryLocation.addressLine }}</p>
+            <p class="mt-2 text-sm text-slate-600 font-medium">{{ orderDetails().deliveryLocation.city }}, {{ orderDetails().deliveryLocation.pincode }}</p>
+          </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="mt-8 rounded-lg border-2 border-amber-400/30 bg-amber-950/50 p-4 shadow-md shadow-amber-900/20" style="animation: slideDown 1s ease-out both; animation-delay: 0.3s;">
+          <p class="mb-2 text-sm font-semibold text-amber-200">📧 What's Next?</p>
+          <p class="text-sm text-amber-100/90">
+            A confirmation email has been sent to your registered email address. You can track your order status anytime.
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-4 sm:flex-row flex-col" style="animation: slideDown 1.2s ease-out both; animation-delay: 0.4s;">
+        <button
+          (click)="trackOrder()"
+          class="flex-1 cursor-pointer rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 px-6 py-4 font-semibold text-white transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-600/40 shadow-lg shadow-emerald-900/30"
+        >
+          📦 Track Order
+        </button>
+        <button
+          (click)="continueShopping()"
+          class="flex-1 cursor-pointer rounded-xl border-2 border-emerald-400/50 bg-emerald-950/40 px-6 py-4 font-semibold text-emerald-100 transition hover:bg-emerald-900/60 hover:border-emerald-400"
+        >
+          Continue Shopping
+        </button>
+      </div>
+    }
+  </div>
+</div>

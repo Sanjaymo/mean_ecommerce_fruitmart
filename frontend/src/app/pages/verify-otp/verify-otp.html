@@ -1,0 +1,64 @@
+<section id="verify-page" class="fm-page-shell fm-auth-shell">
+  <style>
+    /* Page-scoped: label above input, inner rounded container, inputs/buttons full-width */
+    #verify-page .fm-card {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      background: #ffffff;
+      color: #0f172a;
+      border: 1px solid #e6e9ef;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    #verify-page form > div {
+      background: #fbfdff;
+      border-radius: 12px;
+      padding: 14px;
+      box-sizing: border-box;
+      border: 1px solid rgba(230,233,239,0.6);
+      width: 100%;
+    }
+
+    #verify-page label { display:block; margin-bottom:8px; color:#374151; font-weight:600; }
+
+    #verify-page .fm-input,
+    #verify-page .fm-auth-input {
+      width:100%; max-width:none; margin:0; box-sizing:border-box; height:44px; padding:8px 12px; border-radius:8px; border:1px solid #e6e9ef; background:#fff; color:#0f172a;
+    }
+
+    #verify-page .fm-button-primary { width:100%; max-width:none; display:block; margin:12px 0 0 0; height:44px; border-radius:8px; background:linear-gradient(180deg,#1e90ff,#0066d6); color:#fff; font-weight:600; border:none; }
+
+    @media (max-width:420px){ #verify-page .fm-card{padding-left:.75rem;padding-right:.75rem} #verify-page form>div{padding:10px} }
+  </style>
+  <div class="mx-auto w-full max-w-2xl px-4 py-10 sm:px-6 lg:py-16">
+    <div class="fm-card rounded-[32px] p-6 sm:p-8">
+      <div class="text-center">
+        <img ngSrc="/logo.png?v=3" width="48" height="48" alt="FruitMart logo" class="mx-auto h-12 w-12 rounded-2xl object-cover" />
+        <h1 class="mt-4 text-3xl font-semibold text-white">Verify OTP</h1>
+        <p class="mt-2 text-sm text-slate-300">Enter your email and the 6-digit code sent to your mailbox.</p>
+      </div>
+
+      @if (error()) {
+        <div class="mt-5 rounded-2xl border border-rose-400/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">{{ error() }}</div>
+      }
+
+      <form (ngSubmit)="onSubmit()" class="mt-6 space-y-4">
+        <div>
+          <label class="mb-2 block text-sm font-medium text-slate-200">Email</label>
+          <input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" class="fm-input fm-auth-input" required />
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-medium text-slate-200">OTP</label>
+          <input type="text" [ngModel]="otp()" (ngModelChange)="otp.set($event)" name="otp" maxlength="6" placeholder="Enter 6-digit OTP" class="fm-input fm-auth-input" required />
+        </div>
+
+        <button type="submit" [disabled]="loading()" class="fm-button-primary w-full rounded-full py-3.5 text-base disabled:cursor-not-allowed disabled:opacity-60">{{ loading() ? 'Verifying OTP...' : 'Verify OTP' }}</button>
+      </form>
+
+      <p class="mt-6 text-center text-sm text-slate-300">
+        <a routerLink="/forgot-password" class="font-semibold text-indigo-300 transition hover:text-indigo-200">Resend OTP</a>
+      </p>
+    </div>
+  </div>
+</section>

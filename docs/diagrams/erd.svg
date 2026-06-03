@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <style>
+    .entity { fill:#fff; stroke:#333; stroke-width:2; }
+    .title { font: bold 14px Arial, Helvetica, sans-serif; fill:#111; }
+    .field { font: 12px Arial, Helvetica, sans-serif; fill:#222; }
+    .rel { stroke:#444; stroke-width:2; }
+    .label { font:12px Arial; fill:#333; }
+  </style>
+
+  <!-- USER -->
+  <g>
+    <rect class="entity" x="60" y="60" width="240" height="140" rx="6"/>
+    <text class="title" x="180" y="86" text-anchor="middle">USER</text>
+    <text class="field" x="80" y="110">_id : ObjectId (PK)</text>
+    <text class="field" x="80" y="130">name : string</text>
+    <text class="field" x="80" y="150">email : string</text>
+    <text class="field" x="80" y="170">role : string</text>
+  </g>
+
+  <!-- PRODUCT -->
+  <g>
+    <rect class="entity" x="380" y="60" width="260" height="160" rx="6"/>
+    <text class="title" x="510" y="86" text-anchor="middle">PRODUCT</text>
+    <text class="field" x="400" y="120">_id : ObjectId (PK)</text>
+    <text class="field" x="400" y="140">sellerId : ObjectId (FK → USER)</text>
+    <text class="field" x="400" y="160">name, price, stock, category</text>
+  </g>
+
+  <!-- ORDER -->
+  <g>
+    <rect class="entity" x="740" y="60" width="260" height="160" rx="6"/>
+    <text class="title" x="870" y="86" text-anchor="middle">ORDER</text>
+    <text class="field" x="760" y="120">_id : ObjectId (PK)</text>
+    <text class="field" x="760" y="140">userId : ObjectId (FK → USER)</text>
+    <text class="field" x="760" y="160">total, status, shippingAddress</text>
+  </g>
+
+  <!-- ORDER_ITEM -->
+  <g>
+    <rect class="entity" x="380" y="260" width="300" height="100" rx="6"/>
+    <text class="title" x="530" y="286" text-anchor="middle">ORDER_ITEM</text>
+    <text class="field" x="400" y="320">_id : ObjectId (PK)</text>
+    <text class="field" x="400" y="340">orderId : ObjectId (FK → ORDER)</text>
+    <text class="field" x="400" y="360">productId : ObjectId (FK → PRODUCT)</text>
+  </g>
+
+  <!-- PAYMENT -->
+  <g>
+    <rect class="entity" x="740" y="260" width="260" height="100" rx="6"/>
+    <text class="title" x="870" y="286" text-anchor="middle">PAYMENT</text>
+    <text class="field" x="760" y="320">_id : ObjectId (PK)</text>
+    <text class="field" x="760" y="340">orderId : ObjectId (FK → ORDER)</text>
+    <text class="field" x="760" y="360">amount, status, providerRef</text>
+  </g>
+
+  <!-- EMAIL_LOG -->
+  <g>
+    <rect class="entity" x="60" y="260" width="260" height="100" rx="6"/>
+    <text class="title" x="190" y="286" text-anchor="middle">EMAIL_LOG</text>
+    <text class="field" x="80" y="320">_id : ObjectId (PK)</text>
+    <text class="field" x="80" y="340">to, subject, template, status, sentAt</text>
+  </g>
+
+  <!-- Relationships lines -->
+  <line class="rel" x1="300" y1="120" x2="380" y2="120" />
+  <text class="label" x="340" y="110" text-anchor="middle">sells</text>
+
+  <line class="rel" x1="640" y1="120" x2="740" y2="120" />
+  <text class="label" x="690" y="110" text-anchor="middle">places</text>
+
+  <line class="rel" x1="530" y1="310" x2="740" y2="310" />
+  <text class="label" x="640" y="300" text-anchor="middle">contains</text>
+
+  <line class="rel" x1="900" y1="310" x2="900" y2="220" />
+  <text class="label" x="920" y="260" transform="rotate(-90 920,260)" text-anchor="middle">paid-by</text>
+
+  <text class="label" x="80" y="380">Generated ERD: User, Product, Order, OrderItem, Payment, EmailLog</text>
+</svg>
